@@ -1,0 +1,17 @@
+# Binaries and build artifacts
+build/
+bin/
+*.o
+*.so
+*.a
+
+# Data files
+*.root
+*.parquet
+
+# Python/Environment
+__pycache__/
+.ipynb_checkpoints/
+.env
+EDM4hep/
+podio/
