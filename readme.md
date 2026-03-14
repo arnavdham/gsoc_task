@@ -46,12 +46,7 @@ xrdcp root://dtn-eic.jlab.org//volatile/eic/EPIC/FULL/26.02.0/epic_craterlake/DI
 
 # Build Instructions
 
-Clone the repository:
-
-```
-git clone <repo_url>
-cd podio-arrow-converter
-```
+After cloning the repo,
 
 Create a build directory:
 
@@ -79,13 +74,13 @@ make -j
 The program accepts two command line arguments:
 
 ```
-podio_arrow_converter <input_root_file> <output_parquet_file>
+./converter <input_root_file> <output_parquet_file>
 ```
 
 Example:
 
 ```
-./podio_arrow_converter input.edm4hep.root output.parquet
+./converter input.edm4hep.root output.parquet
 ```
 
 ---
