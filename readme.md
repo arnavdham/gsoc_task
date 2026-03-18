@@ -249,3 +249,25 @@ Generate and store Arrow schemas for each PODIO collection for reuse.
 * Streaming conversion for large datasets
 
 ---
+
+# Technical Evolution: Handling Variable-Length VectorMembers
+Supporting complex PODIO data models requires handling collections where the number of elements per event varies (e.g., Particle Weights, Hits, or Tracks). During this evaluation, I explored three distinct architectural approaches:
+
+### 1. Approach: Standard Nested Lists
+Initial tests used the traditional arrow::ListBuilder. While functional, this approach requires data to be strictly contiguous during ingestion, which doesn't fully align with the non-contiguous memory flexibility often found in PODIO's internal structures.
+
+### 2. Approach: Optimized In-Memory ListView
+I transitioned the ingestion phase to use arrow::ListView (introduced in Arrow 14.0+).
+
+The Advantage: ListView is technically superior for HEP data because it allows for non-contiguous and overlapping memory slices in RAM.
+
+The Hurdle: I identified an upstream limitation in the C++ Parquet writer (Ref: Arrow GH-9344). Currently, the C++ implementation of Parquet cannot directly serialize ListView because the Parquet specification requires a strictly sequential, 3-level nested list structure.
+
+### 3. Approach: Hybrid Ingestion with Buffer Normalization (Final)
+To maintain high performance in-memory while ensuring 100% compatibility, I implemented a Buffer Normalization Layer.
+
+Ingestion: Data is ingested into a ListViewBuilder, the ideal internal format for a PODIO-Arrow engine.
+
+Normalization: Before serialization, a normalization step manually extracts the offsets and lengths from the ListView and performs a high-speed sequential copy into a standard ListArray.
+
+Serialization: These normalized buffers satisfy the strict invariants required by parquet-cpp, ensuring the file is readable by any standard Parquet consumer.

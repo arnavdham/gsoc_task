@@ -33,3 +33,15 @@ target_link_libraries(converter
     Arrow::arrow_shared 
     Parquet::parquet_shared
 )
+
+add_executable(vector_converter src/vector_converter.cc)
+
+target_link_libraries(vector_converter PRIVATE 
+    podio
+    podioRootIO
+    ${ROOT_LIBRARIES}
+    edm4hep
+    edm4hepDict
+    Arrow::arrow_shared
+    Parquet::parquet_shared
+)
