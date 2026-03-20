@@ -261,7 +261,7 @@ I transitioned the ingestion phase to use arrow::ListView (introduced in Arrow 1
 
 The Advantage: ListView is technically superior for HEP data because it allows for non-contiguous and overlapping memory slices in RAM.
 
-The Hurdle: I identified an upstream limitation in the C++ Parquet writer (Ref: Arrow GH-9344). Currently, the C++ implementation of Parquet cannot directly serialize ListView because the Parquet specification requires a strictly sequential, 3-level nested list structure.
+The Hurdle: I identified an upstream limitation in the C++ Parquet writer. Currently, the C++ implementation of Parquet cannot directly serialize ListView because the Parquet specification requires a strictly sequential, 3-level nested list structure.
 
 ### 3. Approach: Hybrid Ingestion with Buffer Normalization (Final)
 To maintain high performance in-memory while ensuring 100% compatibility, I implemented a Buffer Normalization Layer.
